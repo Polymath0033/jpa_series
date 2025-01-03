@@ -15,17 +15,22 @@ public class Main {
         Map<String,String> props = new HashMap<>();
 //        For showing how sql transaction works
         props.put("hibernate.show_sql", "true");
+//        Used to create a table when it is never been initiated. This is not recommended on a production application
+        props.put("hibernate.hbm2ddl.auto", "update");
+//
+         //  props.put("hibernate.hbm2ddl.auto", "update");
         EntityManagerFactory emf = new HibernatePersistenceProvider().createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(persistenceUnitName),props);
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             Employee emp = new Employee();
-            Employee emp1 = em.find(Employee.class, 1);
-            if (emp1 != null) {
-                System.out.println(emp1.toString());
-            }
-
-
+            emp.setName("John Doe");
+            emp.setAddress("Lagos");
+            em.persist(emp);
+//            var e1 = em.getReference(Employee.class, 1);
+//            System.out.println(e1);
+//            e1.setName("Hello World");
+//            em.refresh(e1);
 
             em.getTransaction().commit();
         }finally {
